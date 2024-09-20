@@ -82,13 +82,13 @@ def display_random_row(df, section_title):
         <div id="timer_{section_title}">30 seconds</div>
         <script>
             var timeLeft_{section_title} = 30;
-            var timer_{section_title} = setInterval(function(){
-                if(timeLeft_{section_title} <= 0){
+            var timer_{section_title} = setInterval(function(){{
+                if(timeLeft_{section_title} <= 0){{
                     clearInterval(timer_{section_title});
-                }
+                }}
                 document.getElementById("timer_{section_title}").innerHTML = timeLeft_{section_title} + " seconds";
                 timeLeft_{section_title} -= 1;
-            }, 1000);
+            }}, 1000);
         </script>
     """
     st.components.v1.html(countdown_html, height=30)
