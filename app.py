@@ -2,10 +2,13 @@ import pandas as pd
 import streamlit as st
 import time
 import requests
-import os
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
+
+
+# Autorefresh every 30 seconds
+st_autorefresh(interval=30 * 1000, key="datarefresh")
 
 # Function to get data from Google Sheets API
 def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
@@ -95,17 +98,6 @@ Các link khác:
 # Get unique subjects
 unique_subjects = df['Subject'].unique()
 
-# Create sections for each subject
-subject_sections = {subject: st.empty() for subject in unique_subjects}
-
-# Infinite loop to update the content every 30 seconds
-while True:
-    for subject in unique_subjects:
-        subject_df = df[df['Subject'] == subject]  # Filter data by subject
-        with subject_sections[subject]:
-            display_random_row(subject_df, subject)
-
-    # Timer for 30 seconds
-    for i in range(30, 0, -1):
-        st.write(f"Next update in {i} seconds...")
-        time.sleep(1)
+for subject in unique_subjects:
+    subject_df = df[df['Subject'] == subject]
+    display_random_row(subject_df, subject)
