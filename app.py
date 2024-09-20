@@ -50,12 +50,6 @@ def convert_to_dataframe(sheet_data):
 # Convert to DataFrame
 df = convert_to_dataframe(sheet_data)
 
-# Display the data
-if df is not None:
-    st.write(df)
-else:
-    st.write("No data found.")
-
 # Function to display a random row from a given dataframe sectioned by subject
 def display_random_row(df, section_title):
     if df.empty:
