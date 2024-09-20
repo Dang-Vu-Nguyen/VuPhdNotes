@@ -2,20 +2,10 @@ import pandas as pd
 import streamlit as st
 import requests
 from streamlit_autorefresh import st_autorefresh
-import re
+import uuid
 
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
-
-st.title('Vu\'s PhD Notes')
-
-# Function to sanitize names for use in JavaScript variable names and HTML IDs
-def sanitize_name(name):
-    # Remove all non-word characters (everything except numbers and letters)
-    name = re.sub(r"[^\w]", '', name)
-    # Remove leading characters until we find a letter or underscore
-    name = re.sub(r"^[^A-Za-z_]+", '', name)
-    return name
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
@@ -87,32 +77,41 @@ def display_random_row(df, section_title):
             st.write(f"- {note}")
     st.write("---")
 
-    # Sanitize section_title for use in IDs and variable names
-    sanitized_title = sanitize_name(section_title)
+
+    # Generate a unique ID for this section
+    unique_id = uuid.uuid4().hex[:8]
+    sanitized_title = f"timer_{unique_id}"
+
+    # Debugging: Print sanitized_title
+    # st.write(f"Sanitized Title: {sanitized_title}")
 
     # Display the countdown timer with styling
     countdown_html = f"""
         <div style="display: flex; align-items: center;">
             <span>Next in:</span>
-            <div id="timer_{sanitized_title}" style="color: black; font-weight: bold; margin-left: 5px;">30 s</div>
+            <div id="{sanitized_title}" style="color: black; font-weight: bold; margin-left: 5px;">30 s</div>
         </div>
         <script>
-            if (typeof timer_{sanitized_title} !== 'undefined') {{
-                clearInterval(timer_{sanitized_title});
+            if (typeof {sanitized_title} !== 'undefined') {{
+                clearInterval({sanitized_title});
             }}
 
-            var timeLeft_{sanitized_title} = 30;
-            var timer_{sanitized_title} = setInterval(function(){{
-                if(timeLeft_{sanitized_title} <= 0){{
-                    clearInterval(timer_{sanitized_title});
+            var timeLeft_{unique_id} = 30;
+            var {sanitized_title} = setInterval(function(){{
+                if(timeLeft_{unique_id} <= 0){{
+                    clearInterval({sanitized_title});
                 }}
-                document.getElementById("timer_{sanitized_title}").innerHTML = timeLeft_{sanitized_title} + " s";
-                timeLeft_{sanitized_title} -= 1;
+                document.getElementById("{sanitized_title}").innerHTML = timeLeft_{unique_id} + " s";
+                timeLeft_{unique_id} -= 1;
             }}, 1000);
         </script>
     """
-    # Use a unique key for each HTML component
-    st.components.v1.html(countdown_html, height=40, key=f"timer_{sanitized_title}")
+
+    # Use the unique ID as the key
+    component_key = f"{sanitized_title}"
+    st.components.v1.html(countdown_html, height=40, key=component_key)
+
+st.title('Vu\'s PhD Notes')
 
 # App description
 st.markdown('''
