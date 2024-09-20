@@ -7,6 +7,8 @@ import re
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
 
+st.title('Vu\'s PhD Notes')
+
 # Function to sanitize names for use in JavaScript variable names and HTML IDs
 def sanitize_name(name):
     # Remove all non-word characters (everything except numbers and letters)
