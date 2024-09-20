@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import time
 import requests
+from streamlit_autorefresh import st_autorefresh
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
