@@ -77,6 +77,7 @@ def display_random_row(df, section_title):
     st.write("---")
 
     # Display the countdown timer
+    st.write("Next: ")
     countdown_html = f"""
         <div id="timer_{section_title}" style="color: white; font-weight: bold;">30 seconds</div>
         <script>
