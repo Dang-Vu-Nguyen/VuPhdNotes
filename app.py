@@ -89,11 +89,12 @@ st.title('Vu\'s PhD Notes')
 st.markdown('''
 Mình dùng nơi nay để lưu trữ và ôn tập lại những kiến thức đã học.
 
-Mình để nội dung ở đây công khai vì hy vọng nó sẽ có ích cho ai đó.
+Mình để nội dung ở đây công khai vì hy vọng nó sẽ có ích cho ai đó cần. Rất hoan nghênh nếu bạn tham khảo với mục đích học tập cá nhân thuần túy.
 
-Rất hoan nghênh nếu bạn tham khảo với cho mục đích học tập cá nhân thuần túy.
+Với những mục đích sử dụng khác, phiền bạn liên hệ để trao đổi trước với mình qua địa chỉ email nguyendangvu.mailbox@gmail.com
 
-Với những mục đích sử dụng khác, phiền bạn liên hệ để trao đổi trước với mình qua địa chỉ email: nguyendangvu.mailbox@gmail.com
+Thân ái,
+Vũ
 ''')
 
 st.divider()
