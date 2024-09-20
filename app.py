@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
 import requests
+import random  # Import random module
+
 
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
@@ -110,7 +112,16 @@ st.divider()
 if df is not None and not df.empty:
     if 'Subject' in df.columns:
         unique_subjects = df['Subject'].unique()
-
+        unique_subjects = unique_subjects.tolist()  # Convert to list for shuffling
+        
+        # Shuffle the subjects on first load
+        if 'shuffled_subjects' not in st.session_state:
+            random.shuffle(unique_subjects)
+            st.session_state['shuffled_subjects'] = unique_subjects
+        else:
+            # Use the stored shuffled order
+            unique_subjects = st.session_state['shuffled_subjects']
+            
         for subject in unique_subjects:
             subject_df = df[df['Subject'] == subject]
             display_random_row(subject_df, subject)
