@@ -4,9 +4,13 @@ import time
 import requests
 from streamlit_autorefresh import st_autorefresh
 
+
+# Set up Streamlit page
+st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
+
+
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
-
 
 # Autorefresh every 30 seconds
 st_autorefresh(interval=30 * 1000, key="datarefresh")
@@ -71,9 +75,6 @@ def display_random_row(df, section_title):
         st.write(f"- **Note{i}**: {random_row.get(f'Note{i}', 'N/A')}")
     st.write("---")
 
-
-# Set up Streamlit page
-st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
 
 # App description
 st.markdown('''
