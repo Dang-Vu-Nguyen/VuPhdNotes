@@ -77,16 +77,15 @@ def display_random_row(df, section_title):
     st.write("---")
 
     # Display the countdown timer
-    st.write("Next in (s): ")
     countdown_html = f"""
-        <div id="timer_{section_title}">30 seconds</div>
+        <div id="timer_{section_title}" style="color: white; font-weight: bold;">30 seconds</div>
         <script>
             var timeLeft_{section_title} = 30;
             var timer_{section_title} = setInterval(function(){{
                 if(timeLeft_{section_title} <= 0){{
                     clearInterval(timer_{section_title});
                 }}
-                document.getElementById("timer_{section_title}").innerHTML = timeLeft_{section_title} + " seconds";
+                document.getElementById("timer_{section_title}").innerHTML = timeLeft_{section_title} + " s";
                 timeLeft_{section_title} -= 1;
             }}, 1000);
         </script>
