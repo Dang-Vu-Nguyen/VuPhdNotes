@@ -1,17 +1,12 @@
 import pandas as pd
 import streamlit as st
 import requests
-from streamlit_autorefresh import st_autorefresh
-import uuid
 
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
-
-# Autorefresh every 30 seconds
-st_autorefresh(interval=30 * 1000, key="datarefresh")
 
 # Function to get data from Google Sheets API
 def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
@@ -62,13 +57,22 @@ def display_random_row(df, section_title):
         st.write(f"No data available for {section_title}")
         return
 
-    # Get total number of rows for this subject
-    total_rows = len(df)
+    # Button to pick a new random row
+    if st.button('Pick new random row', key=f'button_{section_title}'):
+        # Pick a new random row and update session state
+        random_row = df.sample(n=1).iloc[0]
+        st.session_state[f"random_row_{section_title}"] = random_row
+    else:
+        # If not already in session state, pick a random row
+        if f"random_row_{section_title}" not in st.session_state:
+            random_row = df.sample(n=1).iloc[0]
+            st.session_state[f"random_row_{section_title}"] = random_row
 
-    random_row = df.sample(n=1).iloc[0]
+    # Use session state to get the random row
+    random_row = st.session_state[f"random_row_{section_title}"]
 
     # Display the selected row
-    st.write(f" {section_title} ({total_rows})")  # Updated to header level 3
+    st.write(f" {section_title} ({len(df)})")  # Updated to header level 3
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
     st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
@@ -76,40 +80,6 @@ def display_random_row(df, section_title):
         if note != 'N/A' and note.strip() != '':
             st.write(f"- {note}")
     st.write("---")
-
-
-    # Generate a unique ID for this section
-    unique_id = uuid.uuid4().hex[:8]
-    sanitized_title = f"timer_{unique_id}"
-
-    # Debugging: Print sanitized_title
-    # st.write(f"Sanitized Title: {sanitized_title}")
-
-    # Display the countdown timer with styling
-    countdown_html = f"""
-        <div style="display: flex; align-items: center;">
-            <span>Next in:</span>
-            <div id="{sanitized_title}" style="color: black; font-weight: bold; margin-left: 5px;">30 s</div>
-        </div>
-        <script>
-            if (typeof {sanitized_title} !== 'undefined') {{
-                clearInterval({sanitized_title});
-            }}
-
-            var timeLeft_{unique_id} = 30;
-            var {sanitized_title} = setInterval(function(){{
-                if(timeLeft_{unique_id} <= 0){{
-                    clearInterval({sanitized_title});
-                }}
-                document.getElementById("{sanitized_title}").innerHTML = timeLeft_{unique_id} + " s";
-                timeLeft_{unique_id} -= 1;
-            }}, 1000);
-        </script>
-    """
-
-    # Use the unique ID as the key
-    component_key = f"{sanitized_title}"
-    st.components.v1.html(countdown_html, height=40, key=component_key)
 
 st.title('Vu\'s PhD Notes')
 
