@@ -1,14 +1,57 @@
 import pandas as pd
 import streamlit as st
 import time
+import requests
 
-# Function to simulate loading data from Google Sheets
-def load_gsheet():
-    # For actual implementation, use Google Sheets API to fetch the data.
-    # This is a placeholder for demo purposes.
-    gsheet_url = 'your_google_sheet_url_here'
-    df = pd.read_csv(gsheet_url)  # Replace with gsheet fetching function
-    return df
+
+# Function to get data from Google Sheets API
+def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
+    # Construct the URL for the Google Sheets API
+    url = f'https://sheets.googleapis.com/v4/spreadsheets/{spreadsheet_id}/values/{sheet_name}!A1:Z?alt=json&key={api_key}'
+
+    try:
+        # Make a GET request to retrieve data from the Google Sheets API
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the JSON response
+        data = response.json()
+        return data
+
+    except requests.exceptions.RequestException as e:
+        # Handle any errors that occur during the request
+        st.error(f"An error occurred: {e}")
+        return None
+
+# Configuration
+spreadsheet_id = '1-5pPM5sJye6nROpJIcDcyzMskbnScBnkBZ9XjvBgtGM'  # Replace with your spreadsheet ID
+api_key = 'AIzaSyDtAGeRBkXcrD1VlqKzjPlmKPCCHLTQ74Q'  # Your API key
+sheet_name = 'Sheet1'  # Replace with your sheet name
+
+# Fetch the data
+sheet_data = get_google_sheet_data(spreadsheet_id, sheet_name, api_key)
+
+# Function to convert the data into a pandas DataFrame
+def convert_to_dataframe(sheet_data):
+    if sheet_data:
+        # Extract the headers and rows
+        headers = sheet_data['values'][0]  # First row contains the headers
+        rows = sheet_data['values'][1:]  # Remaining rows are the data
+
+        # Convert to DataFrame
+        df = pd.DataFrame(rows, columns=headers)
+        return df
+    else:
+        return None
+
+# Convert to DataFrame
+df = convert_to_dataframe(sheet_data)
+
+# Display the data
+if df is not None:
+    st.write(df)
+else:
+    st.write("No data found.")
 
 # Function to display a random row from a given dataframe sectioned by subject
 def display_random_row(df, section_title):
@@ -27,8 +70,6 @@ def display_random_row(df, section_title):
         st.write(f"- **Note{i}**: {random_row.get(f'Note{i}', 'N/A')}")
     st.write("---")
 
-# Load the data into a dataframe
-df = load_gsheet()
 
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
