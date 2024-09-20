@@ -84,7 +84,7 @@ def display_random_row(df, section_title):
             var timeLeft_{section_title} = 30;
             var timer_{section_title} = setInterval(function(){{
                 if(timeLeft_{section_title} <= 0){{
-                    clearInterval(timer_{section_title}});
+                    clearInterval(timer_{section_title});
                 }}
                 document.getElementById("timer_{section_title}").innerHTML = timeLeft_{section_title} + " seconds";
                 timeLeft_{section_title} -= 1;
