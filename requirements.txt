@@ -1,5 +1,6 @@
 pandas
 streamlit
 streamlit-extras
+streamlit_autorefresh
 plotly
 openpyxl  # <- This is the critical part that fixes the error
