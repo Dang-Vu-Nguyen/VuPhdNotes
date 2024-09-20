@@ -16,7 +16,7 @@ def sanitize_name(name):
     return name
 
 # Access the API key from Streamlit's secrets
-google_api_key = st.secrets["google_api_key"]
+google_api_key = st.secrets[api_keys]["google_api_key"]
 
 # Autorefresh every 30 seconds
 st_autorefresh(interval=30 * 1000, key="datarefresh")
