@@ -76,7 +76,7 @@ def display_random_row(df, section_title):
     random_row = df.sample(n=1).iloc[0]
 
     # Display the selected row
-    st.write(f"### {section_title} ({total_rows})")  # Updated to header level 3
+    st.write(f" {section_title} ({total_rows})")  # Updated to header level 3
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
     st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
@@ -132,6 +132,8 @@ Các link khác:
 - Youtube học tiếng Trung: [Luyện Tiếng Trung 2](https://www.youtube.com/@luyentiengtrung2)
 - Youtube học tiếng Trung (cũ): [Luyện Tiếng Trung](https://www.youtube.com/@luyentiengtrung)
 ''')
+
+st.divider()
 
 # Get unique subjects
 if df is not None and not df.empty:
