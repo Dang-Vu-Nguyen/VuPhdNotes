@@ -25,7 +25,7 @@ def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
 
 # Configuration
 spreadsheet_id = '1-5pPM5sJye6nROpJIcDcyzMskbnScBnkBZ9XjvBgtGM'  # Replace with your spreadsheet ID
-api_key = GOOGLE_API_KEY  # Your API key
+api_key = os.getenv('GOOGLE_API_KEY')  # Your API key
 sheet_name = 'Sheet1'  # Replace with your sheet name
 
 # Fetch the data
