@@ -1,18 +1,22 @@
 import pandas as pd
 import streamlit as st
-import time
 import requests
 from streamlit_autorefresh import st_autorefresh
-
+import re
 
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
 
-# App Title and Description
-st.title('Vu\'s PhD Notes')
+# Function to sanitize names for use in JavaScript variable names and HTML IDs
+def sanitize_name(name):
+    # Remove all non-word characters (everything except numbers and letters)
+    name = re.sub(r"[^\w]", '', name)
+    # Remove leading characters until we find a letter or underscore
+    name = re.sub(r"^[^A-Za-z_]+", '', name)
+    return name
 
 # Access the API key from Streamlit's secrets
-google_api_key = st.secrets["api_keys"]["google_api_key"]
+google_api_key = st.secrets["google_api_key"]
 
 # Autorefresh every 30 seconds
 st_autorefresh(interval=30 * 1000, key="datarefresh")
@@ -46,7 +50,7 @@ sheet_data = get_google_sheet_data(spreadsheet_id, sheet_name, api_key)
 
 # Function to convert the data into a pandas DataFrame
 def convert_to_dataframe(sheet_data):
-    if sheet_data:
+    if sheet_data and 'values' in sheet_data:
         # Extract the headers and rows
         headers = sheet_data['values'][0]  # First row contains the headers
         rows = sheet_data['values'][1:]  # Remaining rows are the data
@@ -66,36 +70,51 @@ def display_random_row(df, section_title):
         st.write(f"No data available for {section_title}")
         return
 
+    # Get total number of rows for this subject
+    total_rows = len(df)
+
     random_row = df.sample(n=1).iloc[0]
 
     # Display the selected row
-    st.write(f"{section_title}")
+    st.write(f"### {section_title} ({total_rows})")  # Updated to header level 3
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
-    st.write(f"Created: {random_row.get('Date', 'N/A')}. Content Checked Status: {random_row.get('Checked?', 'N/A')}")
+    st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
-        st.write(f"- {random_row.get(f'Note{i}', 'N/A')}")
+        note = random_row.get(f'Note{i}', 'N/A')
+        if note != 'N/A' and note.strip() != '':
+            st.write(f"- {note}")
     st.write("---")
 
+    # Sanitize section_title for use in IDs and variable names
+    sanitized_title = sanitize_name(section_title)
+
     # Display the countdown timer with styling
-    st.write("Next in (s): ")
     countdown_html = f"""
-        <div id="timer_{section_title}" style="color: white; font-weight: bold;">30 seconds</div>
+        <div style="display: flex; align-items: center;">
+            <span>Next in:</span>
+            <div id="timer_{sanitized_title}" style="color: black; font-weight: bold; margin-left: 5px;">30 s</div>
+        </div>
         <script>
-            var timeLeft_{section_title} = 30;
-            var timer_{section_title} = setInterval(function(){{
-                if(timeLeft_{section_title} <= 0){{
-                    clearInterval(timer_{section_title});
+            if (typeof timer_{sanitized_title} !== 'undefined') {{
+                clearInterval(timer_{sanitized_title});
+            }}
+
+            var timeLeft_{sanitized_title} = 30;
+            var timer_{sanitized_title} = setInterval(function(){{
+                if(timeLeft_{sanitized_title} <= 0){{
+                    clearInterval(timer_{sanitized_title});
                 }}
-                document.getElementById("timer_{section_title}").innerHTML = timeLeft_{section_title} + " seconds";
-                timeLeft_{section_title} -= 1;
+                document.getElementById("timer_{sanitized_title}").innerHTML = timeLeft_{sanitized_title} + " s";
+                timeLeft_{sanitized_title} -= 1;
             }}, 1000);
         </script>
     """
-    st.components.v1.html(countdown_html, height=30)
+    # Use a unique key for each HTML component
+    st.components.v1.html(countdown_html, height=40, key=f"timer_{sanitized_title}")
 
 # App description
 st.markdown('''
-Mình dùng nơi nay để lưu trữ và ôn tập lại những kiến thức đã học. 
+Mình dùng nơi nay để lưu trữ và ôn tập lại những kiến thức đã học.
 
 Mình để nội dung ở đây công khai vì hy vọng nó sẽ có ích cho ai đó.
 
@@ -109,16 +128,20 @@ st.divider()
 st.markdown('''
 Các link khác:
 
-- Blog cá nhân: [Vu's notes] (https://www.vunotes.com)
-- Youtube học tiếng Trung: [Luyện Tiếng Trung 2] (https://www.youtube.com/@luyentiengtrung2)
-- Youtube học tiếng Trung (cũ): [Luyện Tiếng Trung] (https://www.youtube.com/@luyentiengtrung)
+- Blog cá nhân: [Vu's notes](https://vunotes.com)
+- Youtube học tiếng Trung: [Luyện Tiếng Trung 2](https://www.youtube.com/@luyentiengtrung2)
+- Youtube học tiếng Trung (cũ): [Luyện Tiếng Trung](https://www.youtube.com/@luyentiengtrung)
 ''')
 
-st.divider()
-
 # Get unique subjects
-unique_subjects = df['Subject'].unique()
+if df is not None and not df.empty:
+    if 'Subject' in df.columns:
+        unique_subjects = df['Subject'].unique()
 
-for subject in unique_subjects:
-    subject_df = df[df['Subject'] == subject]
-    display_random_row(subject_df, subject)
+        for subject in unique_subjects:
+            subject_df = df[df['Subject'] == subject]
+            display_random_row(subject_df, subject)
+    else:
+        st.error("The 'Subject' column is missing from the data.")
+else:
+    st.error("No data available to display.")
