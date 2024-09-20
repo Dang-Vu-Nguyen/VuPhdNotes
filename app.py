@@ -60,7 +60,7 @@ def display_random_row(df, section_title):
         return
 
     # Button to pick a new random row
-    if st.button('Pick new random row', key=f'button_{section_title}'):
+    if st.button('Click to get a different concept', key=f'button_{section_title}'):
         # Pick a new random row and update session state
         random_row = df.sample(n=1).iloc[0]
         st.session_state[f"random_row_{section_title}"] = random_row
@@ -74,7 +74,7 @@ def display_random_row(df, section_title):
     random_row = st.session_state[f"random_row_{section_title}"]
 
     # Display the selected row
-    st.write(f" {section_title} ({len(df)})")  # Updated to header level 3
+    st.write(f"Topic: {section_title} (total concepts = {len(df)})")  # Updated to header level 3
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
     st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
