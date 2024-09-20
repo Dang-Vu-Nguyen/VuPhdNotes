@@ -4,6 +4,8 @@ import time
 import requests
 import os
 
+# Access the API key from Streamlit's secrets
+google_api_key = st.secrets["api_keys"]["google_api_key"]
 
 # Function to get data from Google Sheets API
 def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
@@ -26,7 +28,7 @@ def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
 
 # Configuration
 spreadsheet_id = '1-5pPM5sJye6nROpJIcDcyzMskbnScBnkBZ9XjvBgtGM'  # Replace with your spreadsheet ID
-api_key = os.getenv(GOOGLE_API_KEY)  # Your API key
+api_key = google_api_key
 sheet_name = 'Sheet1'  # Replace with your sheet name
 
 # Fetch the data
