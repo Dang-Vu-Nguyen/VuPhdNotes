@@ -71,7 +71,7 @@ def display_random_row(df, section_title):
     # Display the selected row
     st.write(f"{section_title}")
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
-    st.write(f"{random_row.get('Date', 'N/A')}, Checked?: {random_row.get('Checked?', 'N/A')}")
+    st.write(f"Created: {random_row.get('Date', 'N/A')}. Content Checked Status: {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
         st.write(f"- {random_row.get(f'Note{i}', 'N/A')}")
     st.write("---")
@@ -97,6 +97,8 @@ Các link khác:
 - Youtube học tiếng Trung: [Luyện Tiếng Trung 2] (https://www.youtube.com/@luyentiengtrung2)
 - Youtube học tiếng Trung (cũ): [Luyện Tiếng Trung] (https://www.youtube.com/@luyentiengtrung)
 ''')
+
+st.divider()
 
 # Get unique subjects
 unique_subjects = df['Subject'].unique()
