@@ -8,6 +8,8 @@ from streamlit_autorefresh import st_autorefresh
 # Set up Streamlit page
 st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
 
+# App Title and Description
+st.title('Vu\'s PhD Notes')
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
@@ -67,12 +69,11 @@ def display_random_row(df, section_title):
     random_row = df.sample(n=1).iloc[0]
 
     # Display the selected row
-    st.subheader(f"Subject: {section_title}")
-    st.write(f"- **Key Concept**: {random_row['Key concepts']}")
-    st.write(f"- **Date Created**: {random_row['Date']}")
-    st.write(f"- **Checked**: {random_row['Checked?']}")
+    st.write(f"{section_title}")
+    st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
+    st.write(f"{random_row.get('Date', 'N/A')}, Checked?: {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
-        st.write(f"- **Note{i}**: {random_row.get(f'Note{i}', 'N/A')}")
+        st.write(f"- {random_row.get(f'Note{i}', 'N/A')}")
     st.write("---")
 
 
@@ -92,7 +93,7 @@ st.divider()
 st.markdown('''
 Các link khác:
 
-- Blog cá nhân: [Vu's notes] (vunotes.com)
+- Blog cá nhân: [Vu's notes] (https://www.vunotes.com)
 - Youtube học tiếng Trung: [Luyện Tiếng Trung 2] (https://www.youtube.com/@luyentiengtrung2)
 - Youtube học tiếng Trung (cũ): [Luyện Tiếng Trung] (https://www.youtube.com/@luyentiengtrung)
 ''')
