@@ -79,7 +79,7 @@ def display_random_row(df, section_title):
     st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
     for i in range(1, 6):
         note = random_row.get(f'Note{i}', 'N/A')
-        if note != 'N/A' and note.strip() != '':
+        if note != 'N/A' and note is not None and str(note).strip() != '':
             st.write(f"- {note}")
     st.write("---")
 
