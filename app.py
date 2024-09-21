@@ -70,6 +70,7 @@ def display_random_row(df, section_title):
         random_row = current_row
 
     # Display the selected row
+    random_row = st.session_state[f"random_row_{section_title}"]
     st.write(f"Topic: {section_title} (total concepts = {len(df)})")
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
     st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
@@ -78,17 +79,19 @@ def display_random_row(df, section_title):
         if note and str(note).strip():
             st.write(f"- {note}")
 
-    # Button to pick a new random row
-    if st.button('Click to get a different concept', key=f'button_{section_title}'):
+    # Define a callback function to pick a new random row
+    def pick_new_random_row():
         if len(df) > 1:
             df_new = df.drop(random_row.name) if random_row is not None else df
-            # Pick a new random row and update session state
-            random_row = df_new.sample(n=1).iloc[0]
+            new_random_row = df_new.sample(n=1).iloc[0]
         else:
-            # Only one row, pick it
-            random_row = df.iloc[0]
-        st.session_state[f"random_row_{section_title}"] = random_row
+            new_random_row = df.iloc[0]
+        st.session_state[f"random_row_{section_title}"] = new_random_row
+
+    # Button to pick a new random row, placed after the display
+    st.button('Click to get a different concept', key=f'button_{section_title}', on_click=pick_new_random_row)
     st.write("---")
+
     
 st.title('Vu\'s PhD Notes')
 
