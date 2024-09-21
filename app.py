@@ -59,43 +59,36 @@ def display_random_row(df, section_title):
         st.write(f"No data available for {section_title}")
         return
 
-    # Use session state to get the current random row
-    current_row = st.session_state.get(f"random_row_{section_title}", None)    
-    
+    # Retrieve the current random row from session state
+    current_row = st.session_state.get(f"random_row_{section_title}", None)
+
+    # If not already in session state, pick a random row
+    if current_row is None:
+        random_row = df.sample(n=1).iloc[0]
+        st.session_state[f"random_row_{section_title}"] = random_row
+    else:
+        random_row = current_row
+
+    # Display the selected row
+    st.write(f"Topic: {section_title} (total concepts = {len(df)})")
+    st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
+    st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
+    for i in range(1, 6):
+        note = random_row.get(f'Note{i}', 'N/A')
+        if note and str(note).strip():
+            st.write(f"- {note}")
+    st.write("---")
+
     # Button to pick a new random row
     if st.button('Click to get a different concept', key=f'button_{section_title}'):
         if len(df) > 1:
-            if current_row is not None:
-                # Exclude the current row from possible choices
-                df_new = df.drop(current_row.name)
-            else:
-                df_new = df
+            df_new = df.drop(random_row.name) if random_row is not None else df
             # Pick a new random row and update session state
             random_row = df_new.sample(n=1).iloc[0]
         else:
             # Only one row, pick it
             random_row = df.iloc[0]
         st.session_state[f"random_row_{section_title}"] = random_row
-    else:
-        # If not already in session state, pick a random row
-        if f"random_row_{section_title}" not in st.session_state:
-            random_row = df.sample(n=1).iloc[0]
-            st.session_state[f"random_row_{section_title}"] = random_row
-        else:
-            random_row = current_row
-            
-    # Use session state to get the random row
-    random_row = st.session_state[f"random_row_{section_title}"]
-
-    # Display the selected row
-    st.write(f"Topic: {section_title} (total concepts = {len(df)})")  # Updated to header level 3
-    st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
-    st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
-    for i in range(1, 6):
-        note = random_row.get(f'Note{i}', 'N/A')
-        if note != 'N/A' and note is not None and str(note).strip() != '':
-            st.write(f"- {note}")
-    st.write("---")
 
 st.title('Vu\'s PhD Notes')
 
