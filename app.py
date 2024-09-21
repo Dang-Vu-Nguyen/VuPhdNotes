@@ -77,7 +77,6 @@ def display_random_row(df, section_title):
         note = random_row.get(f'Note{i}', 'N/A')
         if note and str(note).strip():
             st.write(f"- {note}")
-    st.write("---")
 
     # Button to pick a new random row
     if st.button('Click to get a different concept', key=f'button_{section_title}'):
@@ -89,7 +88,8 @@ def display_random_row(df, section_title):
             # Only one row, pick it
             random_row = df.iloc[0]
         st.session_state[f"random_row_{section_title}"] = random_row
-
+    st.write("---")
+    
 st.title('Vu\'s PhD Notes')
 
 # App description
