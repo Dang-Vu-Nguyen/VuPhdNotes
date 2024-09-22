@@ -5,7 +5,7 @@ import random  # Import random module
 
 
 # Set up Streamlit page
-st.set_page_config(page_title="Vu's PhD Notes", layout="wide")
+st.set_page_config(page_title="Vu's Vocabulary Learning", layout="wide")
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
@@ -93,25 +93,10 @@ def display_random_row(df, section_title):
     st.write("---")
 
     
-st.title('Vu\'s PhD Notes')
+st.title('Vu\'s Vocabulary Learning')
 
-# App description
-st.markdown('''
-Mình dùng nơi nay để lưu trữ và ôn tập lại những kiến thức đã học.
-
-Mình để nội dung ở đây công khai vì hy vọng nó sẽ có ích cho ai đó cần. Rất hoan nghênh nếu bạn tham khảo với mục đích học tập cá nhân thuần túy.
-
-Với những mục đích sử dụng khác, phiền bạn liên hệ để trao đổi trước với mình qua địa chỉ email nguyendangvu.mailbox@gmail.com
-
-Thân ái,
-
-Vũ
-''')
-
-st.divider()
 
 st.markdown('''
-Các link khác:
 
 - Blog cá nhân: [Vu's notes](https://vunotes.com)
 - Youtube học tiếng Trung: [Luyện Tiếng Trung 2](https://www.youtube.com/@luyentiengtrung2)
