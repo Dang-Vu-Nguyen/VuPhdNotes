@@ -71,10 +71,10 @@ def display_random_row(df, section_title):
 
     # Display the selected row
     random_row = st.session_state[f"random_row_{section_title}"]
-    st.write(f"Topic: {section_title} (total concepts = {len(df)})")
+    st.write(f"Topic: {section_title} (total vocabulary = {len(df)})")
     st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
     st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
-    for i in range(1, 6):
+    for i in range(1, 7):
         note = random_row.get(f'Note{i}', 'N/A')
         if note and str(note).strip():
             st.write(f"- {note}")
