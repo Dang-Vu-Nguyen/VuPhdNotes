@@ -5,7 +5,7 @@ import random  # Import random module
 
 
 # Set up Streamlit page
-st.set_page_config(page_title="Vu's Vocabulary Learning", layout="wide")
+st.set_page_config(page_title="USMLE", layout="wide")
 
 # Access the API key from Streamlit's secrets
 google_api_key = st.secrets["api_keys"]["google_api_key"]
