@@ -8,8 +8,23 @@ from functools import partial  # Add this import
 # Set up Streamlit page
 st.set_page_config(page_title="USMLE", layout="wide")
 
+# Function to get the Google API key with retries
+def get_google_api_key(retries=3, delay=2):
+    for attempt in range(retries):
+        try:
+            if "api_keys" in st.secrets and "google_api_key" in st.secrets["api_keys"]:
+                return st.secrets["api_keys"]["google_api_key"]
+            else:
+                raise KeyError
+        except KeyError:
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                st.error("API key not found in secrets. Please check your configuration.")
+                st.stop()
+
 # Access the API key from Streamlit's secrets
-google_api_key = st.secrets["api_keys"]["google_api_key"]
+google_api_key = get_google_api_key()
 
 # Function to get data from Google Sheets API
 def get_google_sheet_data(spreadsheet_id, sheet_name, api_key):
