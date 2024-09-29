@@ -89,31 +89,34 @@ def display_random_row(df, section_title):
             st.write(f"**{letter_mapping[i]}** {op}")
 
             # Create unique keys for the visibility state
-            ans_key = f"ans_visible_{section_title}_{i}"
-            extra_key = f"extra_visible_{section_title}_{i}"
+            ans_extra_key = f"ans_visible_{section_title}_{i}"
 
             # Initialize the visibility state in session_state if not present
-            if ans_key not in st.session_state:
-                st.session_state[ans_key] = False
-            if extra_key not in st.session_state:
-                st.session_state[extra_key] = False
+            if ans_extra_key not in st.session_state:
+                st.session_state[ans_extra_key] = False
 
             # Define callbacks to toggle the visibility state
             def toggle_visibility(key):
                 st.session_state[key] = not st.session_state[key]
 
-            # Create buttons that toggle the visibility
-            col1, col2 = st.columns(2)
-            with col1:
-                st.button("Answer", key=f"btn_ans_{section_title}_{i}", on_click=partial(toggle_visibility, ans_key))
-            with col2:
-                st.button("Extra", key=f"btn_extra_{section_title}_{i}", on_click=partial(toggle_visibility, extra_key))
+            # Create button that toggles the visibility
+            st.button(
+                "Answer & Extra",
+                key=f"btn_ans_extra_{section_title}_{i}",
+                on_click=partial(toggle_visibility, ans_extra_key)
+            )
 
             # Display the content if visible
-            if st.session_state[ans_key]:
-                st.write(f"**Answer:** {ans if ans else 'N/A'}")
-            if st.session_state[extra_key]:
-                st.write(f"**Extra:** {extra if extra else 'N/A'}")
+            if st.session_state[ans_extra_key]:
+                if ans:
+                    st.write(f"{ans}")
+                else:
+                    st.write("N/A")
+
+                if extra:
+                    st.write(f"**Extra:** {extra}")
+                else:
+                    st.write("**Extra:** N/A")
 
             st.write("")  # Add space between each set    
     # # Loop through Op, Ans, Extra columns
