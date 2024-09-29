@@ -74,11 +74,18 @@ def display_random_row(df, section_title):
     st.write(f"**Review Count:** {random_row.get('Review Count', 'N/A')} &nbsp;&nbsp; **Level:** {random_row.get('Status', 'N/A')}")
     st.write(f"Topic: {section_title} (total questions = {len(df)})")
     st.subheader(f"{random_row.get('Topics', 'N/A')}")
-    for i in range(1, 7):
-        note = random_row.get(f'Note{i}', 'N/A')
-        if note and str(note).strip():
-            st.write(f"- {note}")
 
+    # Loop through Op, Ans, Extra columns
+    for i in range(1, 6):
+        op = random_row.get(f'Op{i}', 'N/A')
+        ans = random_row.get(f'Ans{i}', 'N/A')
+        extra = random_row.get(f'Extra{i}', 'N/A')
+
+        st.write(f"**Op{i}:** {op}")
+        st.write(f"**Ans{i}:** {ans}")
+        st.write(f"**Extra{i}:** {extra}")
+        st.write("")  # Add space between each set
+        
     # Define a callback function to pick a new random row
     def pick_new_random_row():
         if len(df) > 1:
