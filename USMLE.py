@@ -75,16 +75,56 @@ def display_random_row(df, section_title):
     st.write(f"Topic: {section_title} (total questions = {len(df)})")
     st.subheader(f"{random_row.get('Topics', 'N/A')}")
 
+    # Map numbers to letters
+    letter_mapping = {1: 'A.', 2: 'B.', 3: 'C.', 4: 'D.', 5: 'E.'}
+
     # Loop through Op, Ans, Extra columns
     for i in range(1, 6):
-        op = random_row.get(f'Op{i}', 'N/A')
-        ans = random_row.get(f'Ans{i}', 'N/A')
-        extra = random_row.get(f'Extra{i}', 'N/A')
+        op = random_row.get(f'Op{i}', '').strip()
+        ans = random_row.get(f'Ans{i}', '').strip()
+        extra = random_row.get(f'Extra{i}', '').strip()
 
-        st.write(f"**Op{i}:** {op}")
-        st.write(f"**Ans{i}:** {ans}")
-        st.write(f"**Extra{i}:** {extra}")
-        st.write("")  # Add space between each set
+        if op:
+            st.write(f"**{letter_mapping[i]}** {op}")
+
+            # Create unique keys for the visibility state
+            ans_key = f"ans_visible_{section_title}_{i}"
+            extra_key = f"extra_visible_{section_title}_{i}"
+
+            # Initialize the visibility state in session_state if not present
+            if ans_key not in st.session_state:
+                st.session_state[ans_key] = False
+            if extra_key not in st.session_state:
+                st.session_state[extra_key] = False
+
+            # Define callbacks to toggle the visibility state
+            def toggle_visibility(key):
+                st.session_state[key] = not st.session_state[key]
+
+            # Create buttons that toggle the visibility
+            col1, col2 = st.columns(2)
+            with col1:
+                st.button("Answer", key=f"btn_ans_{section_title}_{i}", on_click=partial(toggle_visibility, ans_key))
+            with col2:
+                st.button("Extra", key=f"btn_extra_{section_title}_{i}", on_click=partial(toggle_visibility, extra_key))
+
+            # Display the content if visible
+            if st.session_state[ans_key]:
+                st.write(f"**Answer:** {ans if ans else 'N/A'}")
+            if st.session_state[extra_key]:
+                st.write(f"**Extra:** {extra if extra else 'N/A'}")
+
+            st.write("")  # Add space between each set    
+    # # Loop through Op, Ans, Extra columns
+    # for i in range(1, 6):
+    #     op = random_row.get(f'Op{i}', 'N/A')
+    #     ans = random_row.get(f'Ans{i}', 'N/A')
+    #     extra = random_row.get(f'Extra{i}', 'N/A')
+
+    #     st.write(f"**Op{i}:** {op}")
+    #     st.write(f"**Ans{i}:** {ans}")
+    #     st.write(f"**Extra{i}:** {extra}")
+    #     st.write("")  # Add space between each set
         
     # Define a callback function to pick a new random row
     def pick_new_random_row():
