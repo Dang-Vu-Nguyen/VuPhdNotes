@@ -114,9 +114,9 @@ def display_random_row(df, section_title):
                     st.write("N/A")
 
                 if extra:
-                    st.write(f"**Extra:** {extra}")
+                    st.write(f"**(!)** {extra}")
                 else:
-                    st.write("**Extra:** N/A")
+                    st.write("**(!)** N/A")
 
             st.write("")  # Add space between each set    
 
