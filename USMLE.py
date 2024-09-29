@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import requests
 import random  # Import random module
+from functools import partial  # Add this import
 
 
 # Set up Streamlit page
