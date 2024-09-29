@@ -72,10 +72,10 @@ def display_random_row(df, section_title):
 
     # Display the selected row
     random_row = st.session_state[f"random_row_{section_title}"]
-    st.write(f"**Review Count:** {random_row.get('Review Count', 'N/A')} &nbsp;&nbsp; **Level:** {random_row.get('Status', 'N/A')}")
-    st.write(f"Topic: {section_title} (total questions = {len(df)})")
-    st.subheader(f"{random_row.get('Topics', 'N/A')}")
-
+    st.write(f"{section_title} (total questions = {len(df)}) &nbsp;&nbsp; Views: {random_row.get('Review Count', 'N/A')} &nbsp;&nbsp; **Level:** {random_row.get('Status', 'N/A')}")
+    st.write(f"Topics: {random_row.get('Topics', 'N/A')}")
+    st.write(f"**Info:** {random_row.get('Info', 'N/A')}")
+    st.write(f"**Question:** {random_row.get('Question', 'N/A')}")
     # Map numbers to letters
     letter_mapping = {1: 'A.', 2: 'B.', 3: 'C.', 4: 'D.', 5: 'E.'}
 
