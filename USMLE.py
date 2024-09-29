@@ -71,9 +71,9 @@ def display_random_row(df, section_title):
 
     # Display the selected row
     random_row = st.session_state[f"random_row_{section_title}"]
-    st.write(f"**Created:** {random_row.get('Date', 'N/A')} &nbsp;&nbsp; **Checked Status:** {random_row.get('Checked?', 'N/A')}")
-    st.write(f"Topic: {section_title} (total vocabulary = {len(df)})")
-    st.subheader(f"{random_row.get('Key concepts', 'N/A')}")
+    st.write(f"**Review Count:** {random_row.get('Review Count', 'N/A')} &nbsp;&nbsp; **Level:** {random_row.get('Status', 'N/A')}")
+    st.write(f"Topic: {section_title} (total questions = {len(df)})")
+    st.subheader(f"{random_row.get('Topics', 'N/A')}")
     for i in range(1, 7):
         note = random_row.get(f'Note{i}', 'N/A')
         if note and str(note).strip():
@@ -89,7 +89,7 @@ def display_random_row(df, section_title):
         st.session_state[f"random_row_{section_title}"] = new_random_row
 
     # Button to pick a new random row, placed after the display
-    st.button('Click for another word', key=f'button_{section_title}', on_click=pick_new_random_row)
+    st.button('Click for another question', key=f'button_{section_title}', on_click=pick_new_random_row)
     st.write("---")
 
     
